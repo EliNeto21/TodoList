@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ToDo List</title>
+  <link rel="stylesheet" href="./todolist.css">
+  <script src="./todolist.js" defer></script>
+</head>
+<body>
+    <main>
+        <div id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <h2>Menu</h2>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#">Início</a></li>
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Serviços</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </div>
+
+        <div class="container">
+            <div id="content" class="content">
+                <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+            </div>
+            <div class="Area">
+                <h1 class="Header">Lista de Tarefas</h1>
+                <div class="containerAddTask">
+                    <div className='image'>➕</div>
+                    <input type="text"
+                           placeholder='Adicione uma nova tarefa'
+                           id="Newtask"
+                           required
+                           onkeyup="verificarEnter(event)">
+                </div>
+
+                <form id="meuFormulario">
+                    <div class="containerList" id="root">
+                        <input type="checkbox" checked="false" onChange="" name="task" id="task">
+                        <label name="tasklabel" for="task">Atividade Teste</label>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+
+            async function verificarEnter(event) {
+                if (event.key === "Enter") {
+
+                    const valor = document.getElementById('Newtask').value;
+
+                    event.preventDefault()
+                        
+                    const response = await fetch('/tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: valor,
+                        done: false,
+                        userId: 1
+                    })
+                    })
+            
+                    const resposeData = await response.json()
+            
+                    if (!response.ok) {
+                    alert("Atencao: " + resposeData.message)
+                    return
+                    }
+            
+                    localStorage.setItem('token', resposeData.token)
+                    location.href = '/Pages/todolist.html'
+                }
+            }
+
+            // function verificarEnter(event) {
+                
+            //     if (event.key === "Enter") {
+            //         const valor = document.getElementById('task').value;
+
+            //         event.preventDefault();
+
+            //         const formulario = document.getElementById('meuFormulario');
+            //         formulario.submit();
+            //     }
+            // }
+        </script>
+    </main>
+</body>
+</html>
