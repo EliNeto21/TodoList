@@ -49,16 +49,19 @@ export const createToken: RequestHandler = async (req, res) => {
 }
 
 export const verifyToken: RequestHandler = async (req, res, next) => {
+  
   if (!req.headers.authorization)
     return res.status(401).json({ message: 'No token provided' })
 
   const token = req.headers.authorization
 
   try {
+    
     const data = await verify(token)
     // @ts-ignore
     req["jwt"] = data
     next()
+
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError)
       return res.status(401).json({ message: 'Token expired' })

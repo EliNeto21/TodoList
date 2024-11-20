@@ -15,8 +15,8 @@
   <div className='container'>
     <form>
       <h1 class="Header">Login</h1>
-      <input placeholder="Email" type="email" name="email" value="susan@mail.com">
-      <input placeholder="Senha" type="password" name="password" value="123123">
+      <input placeholder="Email" type="email" name="email" value="">
+      <input placeholder="Senha" type="password" name="password" value="">
       <button type="submit">Entrar</button>
     </form>
 
@@ -42,8 +42,8 @@
           return
         }
   
-        localStorage.setItem('token', resposeData.token)
-        location.href = '/Pages/todolist.html'
+        localStorage.setItem('token', resposeData)
+        location.href = '/Pages/todolist/todolist.html'
       })
     </script>
 
