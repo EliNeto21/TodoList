@@ -1,6 +1,28 @@
+const redis = require('../../../src/redisClient');
+const {token, userId, email} = "";
 let users = [];
 
 void async function () {
+
+    //Buscando os dados armazenados no Redis
+    redis.get('userData').then((data) => {
+        if (data) {
+
+        const userData = JSON.parse(data);
+
+        token = userData.token;
+        userId = userData.userId;
+        email = userData.email;
+
+        } else {
+        console.log('Usuário não encontrado no cache.');
+        }
+    })
+    .catch((err) => {
+        console.error('Erro ao recuperar do cache:', err);
+    });
+
+    //Buscando todos os usuários existentes
     const response = await fetch('/users', {
         headers: {
         'Accept': 'application/json',

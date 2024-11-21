@@ -1,10 +1,31 @@
-const userId = localStorage.getItem('userId');
+const redis = require('../../../src/redisClient');
+const {token, userId, email} = "";
 
 void async function () {
+
+  //Buscando os dados armazenados no Redis
+  redis.get('userData').then((data) => {
+    if (data) {
+
+      const userData = JSON.parse(data);
+
+      token = userData.token;
+      userId = userData.userId;
+      email = userData.email;
+
+    } else {
+      console.log('Usuário não encontrado no cache.');
+    }
+  })
+  .catch((err) => {
+    console.error('Erro ao recuperar do cache:', err);
+  });
+
+  //Buscando todas as tarefas do usuário logado
   const response = await fetch('/tasks/' + userId, {
     headers: {
       'Accept': 'application/json',
-      'Authorization': `${localStorage.getItem('token')}`
+      'Authorization': `${userData.token}`
     }
   })
 
@@ -16,6 +37,7 @@ void async function () {
 
   const mainForm = document.querySelector('div[id="root"]')
     
+  //Adicionando as tarefas encontradas no corpo da página
   tasks.forEach(newtask => {
     const newForm = mainForm.cloneNode(true)
     const label = newForm.querySelector('label[for="task"]');
@@ -26,8 +48,8 @@ void async function () {
     mainForm.before(newForm)
   });
   
+  //Ajustando os checkboxs para que fiquem marcados ou n
   const checkboxes = document.querySelectorAll('.containerFiltro input[type="checkbox"]');
-
   checkboxes.forEach(checkbox => {
 
     if (checkbox.id !== 'pendentes'){
@@ -62,22 +84,22 @@ async function filtraTasks(event) {
   checkboxes.forEach(checkbox => {
 
     if (checkbox.id === 'pendentes' && checkbox.checked === true) {
-      input = '/tasks/' + localStorage.getItem('userId');
+      input = '/tasks/' + userId;
     }
 
     if (checkbox.id === 'concluidas' && checkbox.checked === true) {
-      input = '/tasks/Complete/' + localStorage.getItem('userId');
+      input = '/tasks/Complete/' + userId;
     }
 
     if (checkbox.id === 'todas' && checkbox.checked === true) {
-      input = '/tasks/All/' + localStorage.getItem('userId');
+      input = '/tasks/All/' + userId;
     }
   });
 
   const response = await fetch(input, {
     headers: {
       'Accept': 'application/json',
-      'Authorization': `${localStorage.getItem('token')}`
+      'Authorization': `${token}`
     }
   })
 
