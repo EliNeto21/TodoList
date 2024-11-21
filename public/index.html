@@ -21,7 +21,6 @@
     </form>
 
     <script>
-      const redis = require('../src/redisClient');
       const form = document.querySelector('form')
 
       form.addEventListener('submit', async (event) => {
@@ -43,8 +42,9 @@
           return
         }
   
-        //Chave definida para que seja expirada junto do Token, 3600 segundos (1h)
-        redis.set('userData', JSON.stringify({ token: resposeData.token, userId: resposeData.userId, email: form.email.value}), 'EX', 3600); 
+        localStorage.setItem('token', resposeData.token)
+        localStorage.setItem('userId', resposeData.userId)
+        localStorage.setItem('email', form.email.value) 
         location.href = '/Pages/todolist/todolist.html'
       })
     </script>

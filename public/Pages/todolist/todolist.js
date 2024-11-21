@@ -1,31 +1,11 @@
-const redis = require('../../../src/redisClient');
-const {token, userId, email} = "";
 
 void async function () {
-
-  //Buscando os dados armazenados no Redis
-  redis.get('userData').then((data) => {
-    if (data) {
-
-      const userData = JSON.parse(data);
-
-      token = userData.token;
-      userId = userData.userId;
-      email = userData.email;
-
-    } else {
-      console.log('Usuário não encontrado no cache.');
-    }
-  })
-  .catch((err) => {
-    console.error('Erro ao recuperar do cache:', err);
-  });
 
   //Buscando todas as tarefas do usuário logado
   const response = await fetch('/tasks/' + userId, {
     headers: {
       'Accept': 'application/json',
-      'Authorization': `${userData.token}`
+      'Authorization': `${localStorage.getItem('token')}`
     }
   })
 
@@ -77,6 +57,7 @@ function toggleSidebar() {
 
 async function filtraTasks(event) {
 
+  const { id } = localStorage.getItem('userId');
   let input = '';
 
   const checkboxes = document.querySelectorAll('.containerFiltro input[type="checkbox"]');
@@ -84,22 +65,22 @@ async function filtraTasks(event) {
   checkboxes.forEach(checkbox => {
 
     if (checkbox.id === 'pendentes' && checkbox.checked === true) {
-      input = '/tasks/' + userId;
+      input = '/tasks/' + id;
     }
 
     if (checkbox.id === 'concluidas' && checkbox.checked === true) {
-      input = '/tasks/Complete/' + userId;
+      input = '/tasks/Complete/' + id;
     }
 
     if (checkbox.id === 'todas' && checkbox.checked === true) {
-      input = '/tasks/All/' + userId;
+      input = '/tasks/All/' + id;
     }
   });
 
   const response = await fetch(input, {
     headers: {
       'Accept': 'application/json',
-      'Authorization': `${token}`
+      'Authorization': `${localStorage.getItem('token')}`
     }
   })
 

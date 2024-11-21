@@ -1,6 +1,3 @@
-const redis = require('../src/redisClient');
-const {token, userId, email} = "";
-
 void async function () {
 
 }()

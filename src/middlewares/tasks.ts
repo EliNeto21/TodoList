@@ -2,6 +2,9 @@ import { RequestHandler } from "express"
 import { PrismaClient } from "@prisma/client"
 import { Task } from "../types/item"
 
+
+const redis = require('../../../src/redisClient');
+
 const tasks = [];
 
 const prisma = new PrismaClient({
