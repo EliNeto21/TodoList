@@ -9,11 +9,4 @@ router.post('/', verifyToken, u.createUser)
 router.put('/:id', verifyToken, checkOwner, u.updateUser)
 router.delete('/:id', verifyToken, checkOwner, u.deleteUser)
 
-// router.use(verifyToken)
-// router.get('/', u.getManyUsers)
-// router.post('/', u.createUser)
-// router.use('/:id', checkOwner)
-// router.put('/:id', u.updateUser)
-// router.delete('/:id', u.deleteUser)
-
 export default router

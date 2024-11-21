@@ -42,7 +42,9 @@
           return
         }
   
-        localStorage.setItem('token', resposeData)
+        localStorage.setItem('token', resposeData.token)
+        localStorage.setItem('userId', resposeData.userId)
+        localStorage.setItem('email', form.email.value)
         location.href = '/Pages/todolist/todolist.html'
       })
     </script>

@@ -11,11 +11,13 @@ const prisma = new PrismaClient({
 export const createTask: RequestHandler = async (req, res) => {
 
     try {
+        const { id } = req.params
+
         const newTask: Task = {
             name: req.body.name,
             content: "",
             done: req.body.done,
-            userId: req.body.userId
+            userId: Number(id)
         }
 
         const result = await prisma.task.create({
@@ -40,7 +42,14 @@ export const createTask: RequestHandler = async (req, res) => {
 export const getAllTask: RequestHandler = async (req, res) => {
 
     try {
-        const tarefas = await prisma.task.findMany()
+
+        const { id } = req.params
+
+        const tarefas = await prisma.task.findMany({
+            where: {
+                userId: Number(id)
+            }
+        })
 
         res.status(200).json(tarefas)
     } 
@@ -55,8 +64,12 @@ export const getAllTask: RequestHandler = async (req, res) => {
 export const getAllIncompleteTask: RequestHandler = async (req, res) => {
 
     try {
+
+        const { id } = req.params
+
         const tarefas = await prisma.task.findMany({
             where: {
+                userId: Number(id),
                 done: false
             }
         })
@@ -74,8 +87,11 @@ export const getAllIncompleteTask: RequestHandler = async (req, res) => {
 export const getAllTaskCompleted: RequestHandler = async (req, res) => {
 
     try {
+        const { id } = req.params
+
         const tarefas = await prisma.task.findMany({
             where: {
+                userId: Number(id),
                 done: true
             }
         })
@@ -89,3 +105,10 @@ export const getAllTaskCompleted: RequestHandler = async (req, res) => {
         await prisma.$disconnect();
     }
 }
+
+export default {
+    createTask,
+    getAllTask,
+    getAllIncompleteTask,
+    getAllTaskCompleted
+  }

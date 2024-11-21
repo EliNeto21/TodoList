@@ -1,6 +1,7 @@
-void async function () {
+const userId = localStorage.getItem('userId');
 
-  const response = await fetch('/tasks', {
+void async function () {
+  const response = await fetch('/tasks/' + userId, {
     headers: {
       'Accept': 'application/json',
       'Authorization': `${localStorage.getItem('token')}`
@@ -25,6 +26,24 @@ void async function () {
     mainForm.before(newForm)
   });
   
+  const checkboxes = document.querySelectorAll('.containerFiltro input[type="checkbox"]');
+
+  checkboxes.forEach(checkbox => {
+
+    if (checkbox.id !== 'pendentes'){
+      checkbox.checked = false;
+    }
+
+    checkbox.addEventListener('change', () => {
+        // Se o checkbox for marcado, os outros serao desmarcados
+        checkboxes.forEach(otherCheckbox => {
+          if (otherCheckbox !== checkbox) {
+            otherCheckbox.checked = false;
+          }
+        });
+    });
+  });
+
 }()
 
 function toggleSidebar() {
@@ -32,4 +51,66 @@ function toggleSidebar() {
   const content = document.getElementById('content');
   sidebar.classList.toggle('open');
   content.classList.toggle('open');
+}
+
+async function filtraTasks(event) {
+
+  let input = '';
+
+  const checkboxes = document.querySelectorAll('.containerFiltro input[type="checkbox"]');
+
+  checkboxes.forEach(checkbox => {
+
+    if (checkbox.id === 'pendentes' && checkbox.checked === true) {
+      input = '/tasks/' + localStorage.getItem('userId');
+    }
+
+    if (checkbox.id === 'concluidas' && checkbox.checked === true) {
+      input = '/tasks/Complete/' + localStorage.getItem('userId');
+    }
+
+    if (checkbox.id === 'todas' && checkbox.checked === true) {
+      input = '/tasks/All/' + localStorage.getItem('userId');
+    }
+  });
+
+  const response = await fetch(input, {
+    headers: {
+      'Accept': 'application/json',
+      'Authorization': `${localStorage.getItem('token')}`
+    }
+  })
+
+  if (response.status == 401) {
+    return
+  }
+
+  const tasks = await response.json()
+
+  const formulario = document.getElementById('meuFormulario');
+  formulario.innerHTML = '';
+
+  tasks.forEach(newtask => {
+    const div = document.createElement('div');
+    div.id = 'root';
+    div.className = 'containerListVisible';
+
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.checked = newtask.done;
+    input.name = 'task'
+    input.id = newtask.id;
+    input.onchange = ''
+
+    div.appendChild(input);
+
+    const label = document.createElement('label');
+    label.name = 'tasklabel';
+    label.for = 'task';
+    label.textContent = newtask.name;
+
+    div.appendChild(label);
+
+    formulario.appendChild(div);
+  });
 }

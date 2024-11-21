@@ -35,6 +35,19 @@
                            onkeyup="verificarEnter(event)">
                 </div>
 
+                <div class="containerFiltro">
+                    <input type="checkbox" id="pendentes" checked="false">
+                    <label name="filtroPendentes" for="pendentes">Pendentes</label>
+                
+                    <input type="checkbox" id="concluidas" checked="false">
+                    <label name="filtroConcluidas" for="concluidas">Concluídas</label>
+                
+                    <input type="checkbox" id="todas" checked="false">
+                    <label name="filtroTodas" for="todas">Todas</label>
+
+                    <button onclick="filtraTasks(event)">Filtrar</button>
+                </div>
+
                 <form id="meuFormulario">
                     <div class="containerList" id="root">
                         <input type="checkbox" checked="false" onChange="" name="task" id="task">
@@ -53,25 +66,24 @@
 
                     event.preventDefault()
                         
-                    const response = await fetch('/tasks', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: valor,
-                        done: false,
-                        userId: 1
-                    })
+                    const response = await fetch('/tasks/' + localStorage.getItem('userId'), {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: valor,
+                            done: false,
+                            userId: localStorage.getItem('userId')
+                        })
                     })
             
                     const resposeData = await response.json()
             
                     if (!response.ok) {
-                    alert("Atencao: " + resposeData.message)
-                    return
+                        alert("Atencao: " + resposeData.message)
+                        return
                     }
             
-                    localStorage.setItem('token', resposeData.token)
-                    location.href = '/Pages/todolist.html'
+                    location.href = '/Pages/todolist/todolist.html'
                 }
             }
         </script>

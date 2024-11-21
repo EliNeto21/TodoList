@@ -86,6 +86,40 @@ body {
     padding-bottom: 20px;
 }
 
+.containerFiltro {
+  display: flex;
+  background-color: #20212C;
+  padding: 30px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+
+  input {
+    width: 25px;
+    height: 25px;
+    margin-right: 10px;
+  }
+
+  label {
+    color: #CCC;
+    margin-right: 30px;
+  }
+
+  button {
+    margin-left: auto;            
+    background-color: #2e2d4e;   
+    color: white;                 
+    border: none;      
+    padding: 10px 20px;        
+    font-size: 16px;    
+    border-radius: 5px;    
+    cursor: pointer;          
+    transition: background-color 0.3s, transform 0.2s;
+  }
+}
+
 Form {
     display: flex;
     flex-direction: column;

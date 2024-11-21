@@ -9,8 +9,8 @@ const prisma = new PrismaClient({
 
 const getManyUsers: RequestHandler = async (req, res) => {
   try {
+    
     const users = await prisma.user.findMany()
-
     res.status(200).json(users)
   } 
   catch (e) {
@@ -49,19 +49,21 @@ const createUser: RequestHandler = async (req, res) => {
 
 const updateUser: RequestHandler = async (req, res) => {
   try {
+
+    const { id } = req.params;
+
     const userAtt: User = {
+      id: Number(id),
       name: req.body.name,
       email: req.body.email,
       password: await bcrypt.hash(req.body.password, 10)
     }
   
-    const { id } = req.params
-  
     if (userAtt.password && userAtt.password.trim().length > 0) {
   
       const result = await prisma.user.update({
         where: {
-          id: Number(id) 
+          id: userAtt.id
         },
         data: {
           name: userAtt.name,
@@ -88,6 +90,16 @@ const deleteUser: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params
 
+    const user = await prisma.user.findFirstOrThrow({
+      where: {
+        id: Number(id)
+      }
+    })
+
+    if (user?.email !== localStorage.getItem('email')) {
+      throw new Error('Você não tem permissão para apagar outros usuários!');
+    }
+
     const response = await prisma.user.delete({
       where: {
         id: Number(id)
@@ -97,7 +109,7 @@ const deleteUser: RequestHandler = async (req, res) => {
     res.status(200).send(response);
   } 
   catch (e) {
-      res.status(401).json({ 'message': 'Erro ao deletar o usuário, entre em contato com o administrador do sistema!' })
+      res.status(401).json({ 'message': 'Erro ao deletar o usuário, entre em contato com o administrador do sistema! - ' + e })
   }
   finally {
       await prisma.$disconnect();

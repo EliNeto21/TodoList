@@ -1,10 +1,11 @@
 export type Item = {
-    id: number;
+    id?: number;
     name: string;
     done: boolean;
 }
 
 export type Task = {
+    id?: number;
     name: string;
     content: string;
     done: boolean;
@@ -12,6 +13,7 @@ export type Task = {
 }
 
 export type User = {
+    id?: number;
     name: string;
     email: string;
     password: string;
