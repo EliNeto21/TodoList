@@ -91,6 +91,18 @@ export const refreshToken: RequestHandler = (req, res) => {
   res.send({ token: newToken })
 }
 
+// Middleware para verificar se os dados estão no cache do Redis
+// const checkCache: RequestHandler = async (req, res, next: Function) => {
+//   const { id } = req.params;
+//   const cachedData = await redis.get(id);
+
+//   if (cachedData) {
+//       return res.json(JSON.parse(cachedData)); // Retorna o cache se encontrado
+//   }
+
+//   next();
+// };
+
 export default {
   createToken,
   verifyToken,

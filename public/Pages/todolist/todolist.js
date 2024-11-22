@@ -1,5 +1,8 @@
-
 void async function () {
+  init()
+}()
+
+async function init() {
 
   const userId  = localStorage.getItem('userId');
 
@@ -56,7 +59,7 @@ void async function () {
     });
   });
 
-}()
+}
 
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
