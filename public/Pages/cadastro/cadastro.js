@@ -1,6 +1,10 @@
 let users = [];
 
 void async function () {
+    init();
+}()
+
+async function init() {
 
     //Buscando todos os usuários existentes
     const response = await fetch('/users', {
@@ -47,7 +51,7 @@ void async function () {
 
         containerTable.appendChild(table);
     });
-}()
+}
 
 // Função para renderizar a lista de usuários
 async function renderUserList() {
@@ -231,7 +235,8 @@ async function updateUser(userId) {
         const users = await response.json()
 
         alert('Usuário alterado com sucesso!')
-        renderUserList()
+        init()
+
 
     }
     catch (error) {

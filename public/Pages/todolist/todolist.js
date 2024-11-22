@@ -1,8 +1,11 @@
 
 void async function () {
 
+  const userId  = localStorage.getItem('userId');
+
   //Buscando todas as tarefas do usuário logado
   const response = await fetch('/tasks/' + userId, {
+    method: 'GET',
     headers: {
       'Accept': 'application/json',
       'Authorization': `${localStorage.getItem('token')}`
@@ -20,10 +23,17 @@ void async function () {
   //Adicionando as tarefas encontradas no corpo da página
   tasks.forEach(newtask => {
     const newForm = mainForm.cloneNode(true)
+
     const label = newForm.querySelector('label[for="task"]');
     label.textContent = newtask.name;
+
     const input = newForm.querySelector('input')
+    input.id = newtask.id;
     input.checked = newtask.done;
+    input.onclick = function() {
+      alterStatusTask(newtask.id, newtask.done);
+    };
+
     newForm.classList.add('containerListVisible');
     mainForm.before(newForm)
   });
@@ -55,9 +65,9 @@ function toggleSidebar() {
   content.classList.toggle('open');
 }
 
-async function filtraTasks(event) {
+async function filtraTasks() {
 
-  const { id } = localStorage.getItem('userId');
+  const id = localStorage.getItem('userId');
   let input = '';
 
   const checkboxes = document.querySelectorAll('.containerFiltro input[type="checkbox"]');
@@ -104,6 +114,9 @@ async function filtraTasks(event) {
     input.name = 'task'
     input.id = newtask.id;
     input.onchange = ''
+    input.onclick = function() {
+      alterStatusTask(newtask.id, newtask.done);
+    };
 
     div.appendChild(input);
 
@@ -116,4 +129,27 @@ async function filtraTasks(event) {
 
     formulario.appendChild(div);
   });
+}
+
+async function alterStatusTask(taskId, done) {
+  
+  const id = Number(taskId);
+
+  const response = await fetch('/tasks/' + id, {
+    method: 'PUT',
+    headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `${localStorage.getItem('token')}`
+    },
+    body: JSON.stringify({
+        done: !done
+    })
+  })
+
+  if (response.status == 401) {
+      alert('Erro ao atualizar tarefa!')
+      return
+  }
+
+  filtraTasks()
 }

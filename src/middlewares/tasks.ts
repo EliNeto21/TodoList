@@ -2,9 +2,6 @@ import { RequestHandler } from "express"
 import { PrismaClient } from "@prisma/client"
 import { Task } from "../types/item"
 
-
-const redis = require('../../../src/redisClient');
-
 const tasks = [];
 
 const prisma = new PrismaClient({
@@ -109,9 +106,33 @@ export const getAllTaskCompleted: RequestHandler = async (req, res) => {
     }
 }
 
+export const attStatusTask: RequestHandler = async (req, res) => {
+
+    try {
+        const id: number = Number(req.params.id);
+        const done: boolean = req.body.done === 'true';
+
+        const result = await prisma.task.update({
+            where: {
+              id: id,
+            },
+            data: req.body
+        });
+        
+        res.status(200).send(result);
+    } 
+    catch (e) {
+        res.status(401).json({ 'message': 'Erro ao atualizar tarefa, entre em contato com o administrador do sistema! ' + e})
+    }
+    finally {
+        await prisma.$disconnect();
+    }
+}
+
 export default {
     createTask,
     getAllTask,
     getAllIncompleteTask,
-    getAllTaskCompleted
+    getAllTaskCompleted,
+    attStatusTask
   }
