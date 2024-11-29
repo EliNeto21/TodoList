@@ -68,7 +68,7 @@ const updateUser: RequestHandler = async (req, res) => {
         data: {
           name: userAtt.name,
           email: userAtt.email,
-          password: userAtt.email
+          password: userAtt.password
         }
       })
   
