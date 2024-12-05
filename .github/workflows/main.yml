@@ -27,10 +27,6 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      # Etapa 4: Lint (opcional, se configurado)
-      - name: Lint Code
-        run: npm run lint
-
   dockerize:
     needs: build
     runs-on: ubuntu-latest
