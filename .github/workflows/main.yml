@@ -42,7 +42,7 @@ jobs:
 
       # Etapa 3: Fazer build da imagem Docker
       - name: Build Docker Image
-        run: docker build -t your-app-name .
+        run: docker build -t todolist .
 
       # Etapa 4: Push da imagem para o Docker Hub ou registry
       - name: Log in to Docker Hub
