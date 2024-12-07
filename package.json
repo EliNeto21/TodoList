@@ -1,7 +1,8 @@
 {
   "name": "todolist",
   "version": "0.0.1",
-  "description": "Ao baixar (somente na primeira vez): 1. git clone https://github.com/ifcvarela/2024-bsi22-fase6....web-dev2....pessoa-rest-api 2. no terminal digitar: npm install",
+  "type": "module",
+  "description": "",
   "main": "dist/app.js",
   "scripts": {
     "start": "node dist/app.js",
